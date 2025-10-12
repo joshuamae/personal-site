@@ -7,6 +7,5 @@ This is my personal website that I deployed using Cloudflare pages.
 - HTML
 - CSS
 - JavaScript
-- Three.js
 - pytest
 - playwright
