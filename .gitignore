@@ -1,4 +1,7 @@
 .DS_Store
-playwright-tests/__pycache__
-playwright-tests/.pytest_cache
+tests/__pycache__
+tests/.pytest_cache
 .idea
+.env
+.playwright/
+.pytest_cache

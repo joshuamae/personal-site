@@ -25,4 +25,4 @@ jobs:
           playwright install --with-deps chromium firefox
 
       - name: Run tests
-        run: pytest playwright-tests/
+        run: pytest --browser chromium --browser firefox
