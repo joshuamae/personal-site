@@ -26,6 +26,6 @@ Install the test dependencies and Playwright's Chromium browser, then run pytest
 
 ```sh
 python3 -m pip install -r requirements.txt
-playwright install chromium
+playwright install chromium firefox
 pytest
 ```

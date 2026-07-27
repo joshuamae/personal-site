@@ -28,10 +28,10 @@ def site_url():
     thread.join()
 
 
-@pytest.fixture
-def page():
+@pytest.fixture(params=["chromium", "firefox"])
+def page(request):
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        browser = getattr(p, request.param).launch(timeout=15_000)
         page = browser.new_page()
         yield page
         browser.close()
@@ -44,19 +44,19 @@ def test_first_load_uses_system_theme(page, site_url):
     assert page.title() == "Joshua Mae"
     expect(page.get_by_role("heading", name="Joshua Mae")).to_be_visible()
     expect(page.locator("html")).to_have_attribute("data-theme", "light")
-    expect(page.get_by_role("button")).to_have_text("Switch to dark mode")
+    expect(page.get_by_text("Switch to dark mode")).to_be_visible()
 
 
 def test_theme_choice_persists(page, site_url):
     page.emulate_media(color_scheme="light")
     page.goto(site_url)
-    theme_toggle = page.get_by_role("button")
+    theme_toggle = page.get_by_role("checkbox")
 
-    theme_toggle.click()
+    theme_toggle.check()
 
     expect(page.locator("html")).to_have_attribute("data-theme", "dark")
-    expect(theme_toggle).to_have_attribute("aria-pressed", "true")
-    expect(theme_toggle).to_have_text("Switch to light mode")
+    expect(theme_toggle).to_be_checked()
+    expect(page.get_by_text("Switch to light mode")).to_be_visible()
 
     page.reload()
 

@@ -23,7 +23,7 @@ function applyTheme(theme, persist = false) {
   const isDark = theme === "dark";
 
   root.dataset.theme = theme;
-  themeToggle.setAttribute("aria-pressed", String(isDark));
+  themeToggle.checked = isDark;
   modeLabel.textContent = `Switch to ${isDark ? "light" : "dark"} mode`;
 
   if (persist) {
@@ -31,15 +31,23 @@ function applyTheme(theme, persist = false) {
   }
 }
 
-applyTheme(root.dataset.theme);
+const activeTheme =
+  root.dataset.theme || getSavedTheme() || (colorScheme.matches ? "dark" : "light");
 
-themeToggle.addEventListener("click", () => {
-  const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
-  applyTheme(nextTheme, true);
+applyTheme(activeTheme);
+
+themeToggle.addEventListener("change", () => {
+  applyTheme(themeToggle.checked ? "dark" : "light", true);
 });
 
-colorScheme.addEventListener("change", ({ matches }) => {
+function handleSystemThemeChange({ matches }) {
   if (!getSavedTheme()) {
     applyTheme(matches ? "dark" : "light");
   }
-});
+}
+
+if (typeof colorScheme.addEventListener === "function") {
+  colorScheme.addEventListener("change", handleSystemThemeChange);
+} else {
+  colorScheme.addListener(handleSystemThemeChange);
+}
