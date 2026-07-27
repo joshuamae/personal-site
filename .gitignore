@@ -1,7 +1,10 @@
 .DS_Store
-tests/__pycache__
-tests/.pytest_cache
-.idea
+.idea/
 .env
 .playwright/
-.pytest_cache
+
+# Python bytecode and test caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
