@@ -1,40 +1,45 @@
-const themeLink = document.getElementById("theme-link");
-const checkbox = document.getElementById("checkbox");
+const root = document.documentElement;
+const themeToggle = document.getElementById("theme-toggle");
 const modeLabel = document.getElementById("mode-label");
-const savedTheme = localStorage.getItem("theme");
+const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
-if (!savedTheme) {
-  if (
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  ) {
-    themeLink.href = "dark-mode.css";
-    document.body.classList.add("dark-mode");
-    checkbox.checked = true;
-    modeLabel.textContent = "Switch to Light Mode";
-  } else {
-    themeLink.href = "main.css";
-    modeLabel.textContent = "Switch to Dark Mode";
-  }
-} else {
-  if (savedTheme === "dark") {
-    themeLink.href = "dark-mode.css";
-    checkbox.checked = true;
-    modeLabel.textContent = "Switch to Light Mode";
-  } else {
-    themeLink.href = "main.css";
-    modeLabel.textContent = "Switch to Dark Mode";
+function getSavedTheme() {
+  try {
+    return localStorage.getItem("theme");
+  } catch {
+    return null;
   }
 }
 
-checkbox.addEventListener("change", () => {
-  if (checkbox.checked) {
-    themeLink.href = "dark-mode.css";
-    localStorage.setItem("theme", "dark");
-    modeLabel.textContent = "Switch to Light Mode";
-  } else {
-    themeLink.href = "main.css";
-    localStorage.setItem("theme", "light");
-    modeLabel.textContent = "Switch to Dark Mode";
+function saveTheme(theme) {
+  try {
+    localStorage.setItem("theme", theme);
+  } catch {
+    // Theme switching still works when storage is unavailable.
+  }
+}
+
+function applyTheme(theme, persist = false) {
+  const isDark = theme === "dark";
+
+  root.dataset.theme = theme;
+  themeToggle.setAttribute("aria-pressed", String(isDark));
+  modeLabel.textContent = `Switch to ${isDark ? "light" : "dark"} mode`;
+
+  if (persist) {
+    saveTheme(theme);
+  }
+}
+
+applyTheme(root.dataset.theme);
+
+themeToggle.addEventListener("click", () => {
+  const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+  applyTheme(nextTheme, true);
+});
+
+colorScheme.addEventListener("change", ({ matches }) => {
+  if (!getSavedTheme()) {
+    applyTheme(matches ? "dark" : "light");
   }
 });

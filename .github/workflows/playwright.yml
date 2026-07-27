@@ -1,28 +1,28 @@
-name: Playwright Tests
+name: Playwright tests
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
 jobs:
-  Personal-Page-Tests:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        playwright install
-        playwright install-deps
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          playwright install --with-deps chromium
 
-    - name: Run Playwright tests
-      run: |
-        pytest playwright-tests/
-
+      - name: Run tests
+        run: pytest playwright-tests/
