@@ -1,6 +1,5 @@
 const root = document.documentElement;
 const themeToggle = document.getElementById("theme-toggle");
-const modeLabel = document.getElementById("mode-label");
 const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
 function getSavedTheme() {
@@ -23,8 +22,10 @@ function applyTheme(theme, persist = false) {
   const isDark = theme === "dark";
 
   root.dataset.theme = theme;
-  themeToggle.checked = isDark;
-  modeLabel.textContent = `Switch to ${isDark ? "light" : "dark"} mode`;
+  themeToggle.setAttribute(
+    "aria-label",
+    `Switch to ${isDark ? "light" : "dark"} mode`,
+  );
 
   if (persist) {
     saveTheme(theme);
@@ -36,8 +37,8 @@ const activeTheme =
 
 applyTheme(activeTheme);
 
-themeToggle.addEventListener("change", () => {
-  applyTheme(themeToggle.checked ? "dark" : "light", true);
+themeToggle.addEventListener("click", () => {
+  applyTheme(root.dataset.theme === "dark" ? "light" : "dark", true);
 });
 
 function handleSystemThemeChange({ matches }) {

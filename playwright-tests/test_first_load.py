@@ -44,19 +44,20 @@ def test_first_load_uses_system_theme(page, site_url):
     assert page.title() == "Joshua Mae"
     expect(page.get_by_role("heading", name="Joshua Mae")).to_be_visible()
     expect(page.locator("html")).to_have_attribute("data-theme", "light")
-    expect(page.get_by_text("Switch to dark mode")).to_be_visible()
+    expect(page.get_by_role("button", name="Switch to dark mode")).to_be_visible()
+    expect(page.locator(".moon-icon")).to_be_visible()
 
 
 def test_theme_choice_persists(page, site_url):
     page.emulate_media(color_scheme="light")
     page.goto(site_url)
-    theme_toggle = page.get_by_role("checkbox")
+    theme_toggle = page.get_by_role("button", name="Switch to dark mode")
 
-    theme_toggle.check()
+    theme_toggle.click()
 
     expect(page.locator("html")).to_have_attribute("data-theme", "dark")
-    expect(theme_toggle).to_be_checked()
-    expect(page.get_by_text("Switch to light mode")).to_be_visible()
+    expect(theme_toggle).to_have_attribute("aria-label", "Switch to light mode")
+    expect(page.locator(".sun-icon")).to_be_visible()
 
     page.reload()
 

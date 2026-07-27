@@ -2,17 +2,16 @@
   color-scheme: light;
   --background: #fff;
   --foreground: #111;
-  --track: #b8b8b8;
-  --track-active: #2e7d32;
-  --thumb: #fff;
+  --focus: #2e7d32;
+  --toggle-background: #eee;
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
   --background: #121212;
   --foreground: #f1f1f1;
-  --track: #777;
-  --track-active: #4caf50;
+  --focus: #4caf50;
+  --toggle-background: #2a2a2a;
 }
 
 * {
@@ -59,6 +58,10 @@ body {
   font-weight: 700;
 }
 
+.personal-information p:last-child {
+  margin-bottom: 0;
+}
+
 .social-links {
   display: flex;
   gap: 0.95rem;
@@ -86,70 +89,47 @@ body {
 }
 
 .social-link:focus-visible,
-.theme-switch input:focus-visible + .slider {
-  outline: 3px solid var(--track-active);
+.theme-toggle:focus-visible {
+  outline: 3px solid var(--focus);
   outline-offset: 4px;
 }
 
-.theme-switch-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  color: inherit;
-  font-size: 0.875rem;
-}
-
-.theme-switch {
-  position: relative;
-  display: inline-block;
-  flex: 0 0 3.125rem;
-  width: 3.125rem;
-  height: 1.5rem;
-}
-
-.theme-switch input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: 0;
-  opacity: 0;
-}
-
-.slider {
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  background: var(--track);
-  cursor: pointer;
-  transition: background-color 160ms ease;
-}
-
-.slider::before {
-  content: "";
-  position: absolute;
-  top: 0.1875rem;
-  left: 0.1875rem;
-  width: 1.125rem;
-  height: 1.125rem;
+.theme-toggle {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  place-items: center;
+  border: 0;
   border-radius: 50%;
-  background: var(--thumb);
-  box-shadow: 0 1px 3px rgb(0 0 0 / 35%);
-  transition: transform 160ms ease;
+  background: var(--toggle-background);
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 160ms ease, transform 120ms ease;
 }
 
-.theme-switch input:checked + .slider {
-  background: var(--track-active);
+.theme-toggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
-.theme-switch input:checked + .slider::before {
-  transform: translateX(1.625rem);
+.theme-toggle:hover {
+  transform: translateY(-2px);
+}
+
+.sun-icon,
+:root[data-theme="dark"] .moon-icon {
+  display: none;
+}
+
+:root[data-theme="dark"] .sun-icon {
+  display: block;
 }
 
 @media (prefers-reduced-motion: reduce) {
   body,
   .social-link,
-  .slider,
-  .slider::before {
+  .theme-toggle {
     transition: none;
   }
 }
